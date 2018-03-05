@@ -21,15 +21,14 @@
 /***********************************************************************/
 /***********************************************************************/
 
-
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 #include <chrono>
-#include <vector>
 #include <fstream>
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
@@ -45,10 +44,10 @@ void error(const string& msg) {
        << "Example: ./uce_ed data.txt  query.txt  128" << endl;
   exit(1);
 }
-  
-} // namespace <anonymous>
 
-int main(int argc, char *argv[]) {
+}  // namespace
+
+int main(int argc, char* argv[]) {
   // Ordering of query by |z(q_i)|.
   vector<int> order;
   // best-so-far
@@ -89,7 +88,7 @@ int main(int argc, char *argv[]) {
     queries.push_back(d);
   }
   qp.close();
-  
+
   size_t mean = ex / length;
   size_t std = sqrt((ex2 / length) - mean * mean);
 
@@ -109,9 +108,8 @@ int main(int argc, char *argv[]) {
   }
   // The query will be sorted by absolute z-normalization value,
   // |z_norm(Q[i])| from high to low.
-  sort(tmp.begin(), tmp.end(), [](auto& lhs, auto& rhs) {
-    return abs(rhs.first) - abs(lhs.first);
-  });
+  sort(tmp.begin(), tmp.end(),
+       [](auto& lhs, auto& rhs) { return abs(rhs.first) - abs(lhs.first); });
   order.resize(length);
   for (size_t i = 0; i < length; ++i) {
     queries[i] = tmp[i].first;
@@ -132,11 +130,9 @@ int main(int argc, char *argv[]) {
   // Main function for calculating ED distance between the query, Q, and
   // current data, T. Note that Q is already sorted by absolute
   // z-normalization value, |z_norm(Q[i])|.
-  auto dist_fun = [&queries, &order, length](const vector<double>& T,
-                                             const int& j,
-                                             const double& mean,
-                                             const double& std,
-                                             const double& best) {
+  auto dist_fun = [&queries, &order, length](
+                      const vector<double>& T, const int& j, const double& mean,
+                      const double& std, const double& best) {
     double sum = 0;
     for (int i = 0; i < length && sum < best; ++i) {
       double x = (T[(order[i] + j)] - mean) / std;
@@ -148,7 +144,7 @@ int main(int argc, char *argv[]) {
   // Read data file, one value at a time.
   while (fp >> d) {
     ex += d;
-    ex2 += d*d;
+    ex2 += d * d;
     data[i % length] = d;
     data[(i % length) + length] = d;
 
@@ -180,6 +176,6 @@ int main(int argc, char *argv[]) {
   cout << "Distance: " << sqrt(best) << endl;
   cout << "Data Scanned: " << i << endl;
   cout << "Total Execution Time: "
-       << chrono::duration_cast<chrono::seconds>(end - start).count()
-       << " secs" << endl;
+       << chrono::duration_cast<chrono::seconds>(end - start).count() << " secs"
+       << endl;
 }
