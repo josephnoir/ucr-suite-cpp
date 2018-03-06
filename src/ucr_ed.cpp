@@ -137,8 +137,8 @@ int main(int argc, char* argv[]) {
   }
   qp.close();
 
-  size_t mean = ex / length;
-  size_t std = sqrt((ex2 / length) - mean * mean);
+  double mean = ex / length;
+  double std = sqrt((ex2 / length) - mean * mean);
 
   // Do z_normalixation on query data.
   //transform(begin(query), end(query), begin(query),
